@@ -285,6 +285,29 @@ export function calculateBlockChances(
 }
 
 /**
+ * Calculates the current round's luck from the pool difficulty percentage.
+ * Block solves are a Poisson process, so the work needed to find a block is
+ * exponentially distributed with a mean of one network difficulty. Luck is the
+ * odds of a round lasting at least this long, 1 / (e^x - 1) for x = diff / 100,
+ * normalised so that 100% diff (the expected work) gives 100% luck.
+ * 0% gives infinite luck, 50% gives ~264.9%, 200% gives ~26.9%.
+ * @param {number | string} diffPercent - Pool difficulty as a % of network difficulty
+ * @returns {string} Luck formatted to one decimal place (e.g., "26.9%"), "∞", "<0.1%", or "N/A"
+ */
+export function calculateLuck(diffPercent: number | string): string {
+  const diff = Number(diffPercent);
+  if (!Number.isFinite(diff) || diff < 0) {
+    return 'N/A';
+  }
+  if (diff === 0) {
+    return '∞';
+  }
+
+  const luck = (Math.expm1(1) / Math.expm1(diff / 100)) * 100;
+  return luck < 0.05 ? '<0.1%' : `${luck.toFixed(1)}%`;
+}
+
+/**
  * Serializes data to JSON, converting all bigint values to strings.
  * Useful for preparing TypeORM entity data for JSON serialization (e.g., for API responses).
  * @param {any} data - The data object containing bigint values

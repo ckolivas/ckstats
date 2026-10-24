@@ -7,6 +7,7 @@ import {
   calculatePercentageChange,
   getPercentageChangeColor,
   calculateAverageTimeToBlock,
+  calculateLuck,
   calculateBlockChances
 } from '../../utils/helpers';
 
@@ -121,6 +122,23 @@ describe('Helper Functions', () => {
     it('returns fallback for invalid non-numeric accepted/hashRate values', () => {
       expect(calculateBlockChances('not-a-number', 1e14, BigInt(100000000000000))['1h']).toBe('<0.001%');
       expect(calculateBlockChances(BigInt(1000000000000), 1e14, 'not-a-number')['1h']).toBe('<0.001%');
+    });
+  });
+
+  describe('calculateLuck', () => {
+    it('calculates luck from pool difficulty percentage', () => {
+      expect(calculateLuck(0)).toBe('∞');
+      expect(calculateLuck(50)).toBe('264.9%');
+      expect(calculateLuck(100)).toBe('100.0%');
+      expect(calculateLuck(200)).toBe('26.9%');
+      expect(calculateLuck(300)).toBe('9.0%');
+      expect(calculateLuck('100')).toBe('100.0%');
+    });
+
+    it('handles very unlucky and invalid values', () => {
+      expect(calculateLuck(1000)).toBe('<0.1%');
+      expect(calculateLuck(-1)).toBe('N/A');
+      expect(calculateLuck('not-a-number')).toBe('N/A');
     });
   });
 });

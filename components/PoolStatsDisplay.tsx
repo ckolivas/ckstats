@@ -14,6 +14,7 @@ import {
   calculatePercentageChange,
   getPercentageChangeColor,
   calculateAverageTimeToBlock,
+  calculateLuck,
 } from '../utils/helpers';
 
 const CountdownTimer = dynamic(() => import('./CountdownTimer'), {
@@ -156,6 +157,18 @@ export default function PoolStatsDisplay({
                   >
                     Found Blocks
                   </Link>
+                </div>
+              </div>
+              <div className="stat">
+                <div className="stat-title">Luck</div>
+                <div className="stat-value text-2xl">
+                  {calculateLuck(stats.diff)}
+                </div>
+                <div
+                  className="stat-desc tooltip text-left"
+                  data-tip="Odds of a round lasting this long, relative to an average round"
+                >
+                  Current round
                 </div>
               </div>
             </div>
