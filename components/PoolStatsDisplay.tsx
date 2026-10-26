@@ -159,18 +159,6 @@ export default function PoolStatsDisplay({
                   </Link>
                 </div>
               </div>
-              <div className="stat">
-                <div className="stat-title">Luck</div>
-                <div className="stat-value text-2xl">
-                  {calculateLuck(stats.diff)}
-                </div>
-                <div
-                  className="stat-desc tooltip text-left"
-                  data-tip="Odds of a round lasting this long, relative to an average round"
-                >
-                  Current round
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -188,6 +176,14 @@ export default function PoolStatsDisplay({
                     {key === 'users' && (
                       <div className="stat-desc">
                         Idle: {formatNumber(stats.idle)}
+                      </div>
+                    )}
+                    {key === 'diff' && (
+                      <div
+                        className="stat-desc tooltip text-left"
+                        data-tip="Odds of a round lasting this long, relative to an average round"
+                      >
+                        Luck: {calculateLuck(stats.diff)}
                       </div>
                     )}
                   </div>
